@@ -14,6 +14,22 @@ For prototype grading, the three required artifacts are here:
 
 ---
 
+### Quick run (prototype artifacts)
+
+**Dataset path**
+```bash
+export GESTURE_DATA_ROOT=/path/to/data_root  # see gesture_game/data/README.md
+```
+
+**Initial ML pipeline**
+```bash
+python ml/train_baseline_sklearn.py
+```
+
+> Note: This prototype write-up is on the `fix/readme-camera-setup` branch of this fork (`beenbeenp/Gesture-Game-main`).
+
+---
+
 ## Setup
 
 ### 1. Create and activate a Python environment (recommended: venv, Python 3.11)

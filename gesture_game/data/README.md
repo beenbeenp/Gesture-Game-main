@@ -7,6 +7,10 @@ We use a public hand-gesture dataset plus optional in-domain webcam samples.
 - HaGRID (HAnd Gesture Recognition Image Dataset)
 - For prototype experiments, use a smaller subset (for example, HaGRID Sample 30k 384p) to keep setup practical.
 
+### Download links (prototype-friendly)
+- HaGRID (full, very large): https://www.kaggle.com/datasets/kapitanov/hagrid
+- Recommended subset for prototype: HaGRID Sample 30k 384p: https://www.kaggle.com/datasets/innominate817/hagrid-sample-30k-384p
+
 ## Folder layout expected by `DatasetLoader`
 
 Create a dataset root with this structure:

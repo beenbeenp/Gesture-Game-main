@@ -6,12 +6,15 @@ Most webcam games still rely on controllers or keyboard input. We are exploring 
 
 ## Prior work and technical context
 
-1. MediaPipe Hand Landmarker
-   - Provides hand landmark detection for image/video streams and is practical for real-time interaction.
+1. MediaPipe Hand Landmarker (official docs)
+   - Real-time hand landmark detection for images/video streams + handedness (left/right).
+   - https://ai.google.dev/edge/mediapipe/solutions/vision/hand_landmarker
 2. MediaPipe Hands (21 landmarks)
-   - The 21-point hand representation is commonly used for gesture understanding.
-3. HaGRID dataset
-   - A large public hand-gesture dataset useful for initial supervised learning experiments.
+   - Infers 21 3D hand landmarks from a single frame; practical for real-time tracking.
+   - https://mediapipe.readthedocs.io/en/latest/solutions/hands.html
+3. HaGRID dataset (public hand gesture dataset)
+   - Dataset page: https://www.kaggle.com/datasets/kapitanov/hagrid
+   - Paper: https://arxiv.org/abs/2206.08219
 
 ## What we are building
 
