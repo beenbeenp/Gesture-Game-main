@@ -6,3 +6,7 @@ mediapipe==0.10.32             # 21-point hand skeleton per frame (Apple Silicon
 
 # Numerical arrays (keep <2.0 — mediapipe 0.10.x requires it)
 numpy==1.26.4                  # frame slicing, landmark arrays
+
+# Initial ML baseline (prototype requirement)
+scikit-learn                   # baseline training/evaluation pipeline
+matplotlib                     # plotting support for analysis/notebooks

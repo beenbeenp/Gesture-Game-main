@@ -4,6 +4,16 @@ A two-player real-time gesture battle game controlled entirely by hand gestures 
 
 ---
 
+## Prototype Checklist
+
+For prototype grading, the three required artifacts are here:
+
+1. Dataset identified/downloaded: `gesture_game/data/README.md`
+2. Initial ML pipeline: `ml/train_baseline_sklearn.py`
+3. Technical blog draft: `docs/index.md`
+
+---
+
 ## Setup
 
 ### 1. Create and activate a Python environment (recommended: venv, Python 3.11)
@@ -67,6 +77,8 @@ GESTURE_CAMERA_INDEX=1 python main.py
 | `opencv-python` | 4.10.0.84 | Webcam capture, frame drawing, display window |
 | `mediapipe` | 0.10.32 | 21-point hand landmark detection (CPU, real-time) |
 | `numpy` | 1.26.4 | Frame slicing and landmark array ops |
+| `scikit-learn` | latest in requirements | Baseline ML training/evaluation pipeline |
+| `matplotlib` | latest in requirements | Plotting support for ML analysis/notebooks |
 | `ffmpeg` (system) | 8.x+ recommended | Low-latency camera capture + camera selection by name |
 
 > **Note:** numpy is pinned below 2.0 because mediapipe 0.10.x requires it.
@@ -112,8 +124,8 @@ GESTURE_CAMERA_INDEX=1 python main.py
 
 ### First-time clone
 ```bash
-git clone https://github.com/IvanJ530/Gesture-Game.git
-cd Gesture-Game
+git clone https://github.com/IvanJ530/Gesture-Game-main.git
+cd Gesture-Game-main
 ```
 
 ### Every time you start working — create a new branch
@@ -169,18 +181,27 @@ git checkout main        # switch back to main
 
 ## Project Structure
 
-```
-gesture_game/
-├── data/
-│   ├── webcam_loader.py       # Camera loader (ffmpeg-first, OpenCV fallback)
-│   └── dataset_loader.py      # Optional: load HaGRID dataset for training
-├── processor/
-│   ├── hand_detector.py       # MediaPipe wrapper, runs per half-frame
-│   ├── gesture_classifier.py  # Singleton — landmark heuristics → Attack/Defend/Heal
-│   ├── stability_filter.py    # Sliding-window vote to reduce prediction flicker
-│   └── game_engine.py         # Singleton — HP, rules, round state
-├── ui/
-│   └── renderer.py            # All cv2 drawing (HUD, HP bars, overlays)
-├── main.py                    # State machine, wires all three tiers
-└── ../logs/                   # Runtime logs/artifacts directory
+```text
+Gesture-Game-main/
+├── README.md
+├── requirements.txt
+├── gesture_game/
+│   ├── main.py                    # State machine, wires all tiers
+│   ├── data/
+│   │   ├── webcam_loader.py       # Camera loader (ffmpeg-first, OpenCV fallback)
+│   │   ├── dataset_loader.py      # Optional: load gesture dataset for training
+│   │   └── README.md              # Dataset source + expected folder layout
+│   ├── processor/
+│   │   ├── hand_detector.py       # MediaPipe wrapper, runs per half-frame
+│   │   ├── gesture_classifier.py  # Landmark heuristics → Attack/Defend/Heal
+│   │   ├── stability_filter.py    # Sliding-window vote to reduce flicker
+│   │   └── game_engine.py         # HP, rules, round state
+│   └── ui/
+│       └── renderer.py            # cv2 drawing (HUD, HP bars, overlays)
+├── ml/
+│   ├── train_baseline_sklearn.py  # Initial ML baseline pipeline
+│   └── README.md                  # How to run baseline training
+├── docs/
+│   └── index.md                   # Background + prior-work blog draft
+└── logs/                          # Runtime logs/artifacts directory
 ```
