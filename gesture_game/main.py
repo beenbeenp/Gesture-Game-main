@@ -22,11 +22,6 @@ from processor.stability_filter   import StabilityFilter
 from processor.game_engine        import GameEngine
 from ui.renderer import Renderer
 
-# ── Camera index ──────────────────────────────────────────────────────
-# macOS:  0 = FaceTime HD Camera (built-in), 1 = iPhone Continuity Camera
-# Change this if the wrong camera is selected.
-CAM_INDEX = 0
-
 # ── Timing constants (seconds) ────────────────────────────────────────
 COUNTDOWN_SECS = 3
 DECISION_SECS  = 2
@@ -74,6 +69,9 @@ def main():
 
     while True:
         frame = cam.get_frame()
+        if frame is None:
+            time.sleep(0.01)
+            continue
 
         frame = cv2.flip(frame, 1)          # mirror for natural feel
         left, right = split_frame(frame)

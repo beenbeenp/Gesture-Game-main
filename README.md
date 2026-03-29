@@ -6,49 +6,57 @@ A two-player real-time gesture battle game controlled entirely by hand gestures 
 
 ## Setup
 
-### 1. Create the conda environment
+### 1. Create and activate a Python environment (recommended: venv, Python 3.11)
 
 ```bash
-conda create -n AMLPROJECT python=3.10 -y
+cd /path/to/Gesture-Game-main
+python3.11 -m venv .venv
+source .venv/bin/activate
 ```
 
-### 2. Install packages (use the env's pip directly — avoids conda routing to system Python)
+> Conda is also fine if you prefer it. The game has been tested with Python 3.11 + mediapipe 0.10.32.
+
+### 2. Install Python packages
 
 ```bash
-/opt/miniconda3/envs/AMLPROJECT/bin/pip install opencv-python==4.10.0.84 mediapipe==0.10.32 numpy==1.26.4
+pip install -r requirements.txt
 ```
 
-> **Why not `conda activate` then `pip install`?** On macOS, `pip` inside an activated conda env can silently resolve to the system pip and install into the wrong Python. Using the full path guarantees packages land in AMLPROJECT.
+### 3. (macOS) Install ffmpeg (recommended)
 
-### 3. Install into the system Python (required for VS Code on macOS)
-
-VS Code defaults to `/usr/local/bin/python3` regardless of conda. Run this once:
+`WebcamLoader` uses ffmpeg for low-latency capture when available.
+If ffmpeg is missing, the code automatically falls back to OpenCV camera capture.
 
 ```bash
-/usr/local/bin/python3 -m pip install opencv-python==4.10.0.84 mediapipe==0.10.32 numpy==1.26.4
+brew install ffmpeg
 ```
 
-### 4. Download the MediaPipe hand landmark model
+### 4. Camera permission (macOS)
 
-mediapipe 0.10.x requires an explicit model file. Run once to download it (~8 MB):
+Allow camera access for your terminal/IDE:
+- System Settings → Privacy & Security → Camera
+
+### 5. MediaPipe model file
+
+`gesture_game/processor/hand_landmarker.task` is already included in this repo.
+If missing, it is auto-downloaded on first run.
+
+### 6. Run the game
 
 ```bash
-curl -L "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task" \
-     -o gesture_game/processor/hand_landmarker.task
-```
-
-> The model is also auto-downloaded on first run if the file is missing.
-
-### 5. Run the game
-
-**From terminal:**
-```bash
-conda activate AMLPROJECT
 cd gesture_game
-/opt/miniconda3/envs/AMLPROJECT/bin/python main.py
+python main.py
 ```
 
-**From VS Code:** open `gesture_game/main.py` and press Run.
+### Optional: choose a specific camera
+
+```bash
+# by camera display name (ffmpeg path)
+GESTURE_CAMERA_NAME="FaceTime HD Camera" python main.py
+
+# by numeric camera index (OpenCV fallback path)
+GESTURE_CAMERA_INDEX=1 python main.py
+```
 
 ---
 
@@ -59,6 +67,7 @@ cd gesture_game
 | `opencv-python` | 4.10.0.84 | Webcam capture, frame drawing, display window |
 | `mediapipe` | 0.10.32 | 21-point hand landmark detection (CPU, real-time) |
 | `numpy` | 1.26.4 | Frame slicing and landmark array ops |
+| `ffmpeg` (system) | 8.x+ recommended | Low-latency camera capture + camera selection by name |
 
 > **Note:** numpy is pinned below 2.0 because mediapipe 0.10.x requires it.
 
@@ -86,6 +95,14 @@ cd gesture_game
 |---|---|
 | `Q` | Quit |
 | `R` | Restart (on game-over screen) |
+
+## Troubleshooting
+
+- `Could not open camera` or `camera access has been denied` on macOS
+  - Enable camera permission for Terminal / VS Code in System Settings.
+  - Try a different device index: `GESTURE_CAMERA_INDEX=1 python main.py`
+- `Camera 'FaceTime HD Camera' not found`
+  - Use another name via `GESTURE_CAMERA_NAME="..."` or use `GESTURE_CAMERA_INDEX`.
 
 ---
 
@@ -155,7 +172,7 @@ git checkout main        # switch back to main
 ```
 gesture_game/
 ├── data/
-│   ├── webcam_loader.py       # Singleton — owns cv2.VideoCapture
+│   ├── webcam_loader.py       # Camera loader (ffmpeg-first, OpenCV fallback)
 │   └── dataset_loader.py      # Optional: load HaGRID dataset for training
 ├── processor/
 │   ├── hand_detector.py       # MediaPipe wrapper, runs per half-frame
@@ -163,7 +180,7 @@ gesture_game/
 │   ├── stability_filter.py    # Sliding-window vote to reduce prediction flicker
 │   └── game_engine.py         # Singleton — HP, rules, round state
 ├── ui/
-│   ├── renderer.py            # All cv2 drawing (HUD, HP bars, overlays)
-│   └── logger.py              # Per-round CSV log written to logs/
-└── main.py                    # State machine, wires all three tiers
+│   └── renderer.py            # All cv2 drawing (HUD, HP bars, overlays)
+├── main.py                    # State machine, wires all three tiers
+└── ../logs/                   # Runtime logs/artifacts directory
 ```
